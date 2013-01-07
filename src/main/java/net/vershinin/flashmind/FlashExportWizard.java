@@ -48,19 +48,22 @@ import org.xmind.ui.wizards.AbstractMindMapExportWizard;
  */
 public class FlashExportWizard extends AbstractMindMapExportWizard {
 	private static final String KEY_MINDMAP_FILE = "mindmapFile";
-	private static final String KEY_RESOURCES_PATH = "resourcesPath";
+	private static final String KEY_JS_FILE = "jsFile";
+	private static final String KEY_SWF_FILE = "swfFile";
 	private static final String KEY_TITLE = "title";
 
 	private static final String RESOURCES_POSTFIX = "_files";
 
 	private static final String TEMPLATE_NAME = "flash.vm";
+	private static final String JS_FILE_NAME = "flashobject.js";
+	private static final String SWF_FILE_NAME = "visorFreemind.swf";
+
 	private static final String TEMPLATE_ENCODING = "UTF-8";
 
-	private static final String HTML_TEMPLATE = "/html/flash.vm";
-	private static final String JAVA_SCRIPT = "/html/flashobject.js";
-	private static final String SWF_FILE = "/html/visorFreemind.swf";
-	private static final String SWF_FILE_NAME = "visorFreemind.swf";
-	private static final String JS_FILE_NAME = "flashobject.js";
+	private static final String RESOURCE_LOCATION = "/html/";
+	private static final String RESOURCE_HTML_TEMPLATE = RESOURCE_LOCATION + TEMPLATE_NAME;
+	private static final String RESOURCE_SWF_FILE = RESOURCE_LOCATION + SWF_FILE_NAME;
+	private static final String RESOURCE_JAVA_SCRIPT = RESOURCE_LOCATION + JS_FILE_NAME;
 
 	private static final String SELECTION_NAME = "org.xmind.ui.export.html"; //$NON-NLS-1$
 
@@ -73,6 +76,7 @@ public class FlashExportWizard extends AbstractMindMapExportWizard {
 	private String baseName;
 	private String htmlFilename;
 
+	private String resourcesDirectory;
 	private String resourcesPath;
 	private String mindmapFilename;
 
@@ -95,7 +99,8 @@ public class FlashExportWizard extends AbstractMindMapExportWizard {
 
 		path = FilenameUtils.getFullPath(targetPath);
 		baseName = FilenameUtils.getBaseName(targetPath);
-		resourcesPath = path + baseName + RESOURCES_POSTFIX;
+		resourcesDirectory = baseName + RESOURCES_POSTFIX;
+		resourcesPath = FilenameUtils.concat(path, resourcesDirectory);
 		htmlFilename = FilenameUtils.getName(targetPath);
 		mindmapFilename = FilenameUtils.getBaseName(htmlFilename) + MINDMAP_EXT;
 		File path = new File(resourcesPath);
@@ -123,7 +128,7 @@ public class FlashExportWizard extends AbstractMindMapExportWizard {
 
 	protected void saveJavaScrpit() {
 		try {
-			InputStream in = getBundle().getEntry(JAVA_SCRIPT).openStream();
+			InputStream in = getBundle().getEntry(RESOURCE_JAVA_SCRIPT).openStream();
 			String jsPath = FilenameUtils.concat(resourcesPath, JS_FILE_NAME);
 			FileOutputStream out = new FileOutputStream(jsPath);
 			IOUtils.copy(in, out);
@@ -135,7 +140,7 @@ public class FlashExportWizard extends AbstractMindMapExportWizard {
 
 	protected void saveSwf() {
 		try {
-			InputStream in = getBundle().getEntry(SWF_FILE).openStream();
+			InputStream in = getBundle().getEntry(RESOURCE_SWF_FILE).openStream();
 			String swfPath = FilenameUtils.concat(resourcesPath, SWF_FILE_NAME);
 			FileOutputStream out = new FileOutputStream(swfPath);
 			IOUtils.copy(in, out);
@@ -151,8 +156,9 @@ public class FlashExportWizard extends AbstractMindMapExportWizard {
 		VelocityContext context = new VelocityContext();
 
 		context.put(KEY_TITLE, mindMap.getCentralTopic().getTitleText());
-		context.put(KEY_RESOURCES_PATH, resourcesPath);
-		context.put(KEY_MINDMAP_FILE, mindmapFilename);
+		context.put(KEY_JS_FILE, FilenameUtils.concat(resourcesDirectory, JS_FILE_NAME));
+		context.put(KEY_MINDMAP_FILE, FilenameUtils.concat(resourcesDirectory, mindmapFilename));
+		context.put(KEY_SWF_FILE, FilenameUtils.concat(resourcesDirectory, SWF_FILE_NAME));
 
 		StringWriter writer = new StringWriter();
 		template.merge(context, writer);
@@ -200,7 +206,7 @@ public class FlashExportWizard extends AbstractMindMapExportWizard {
 	private String getHtmlTemplate() {
 		try {
 
-			InputStream in = getBundle().getEntry(HTML_TEMPLATE).openStream();
+			InputStream in = getBundle().getEntry(RESOURCE_HTML_TEMPLATE).openStream();
 			StringWriter writer = new StringWriter();
 			IOUtils.copy(in, writer, TEMPLATE_ENCODING);
 			return writer.toString();
