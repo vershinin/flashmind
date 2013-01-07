@@ -3,10 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.vershinin</groupId>
 	<artifactId>flashmind</artifactId>
-	<version>0.0.1</version>
+	<version>1.0.0</version>
 	<packaging>bundle</packaging>
 
 	<build>
+		<finalName>${project.groupId}.${project.artifactId}_${project.version}</finalName>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<plugins>
 			<plugin>
@@ -37,6 +38,28 @@
 					</instructions>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.4</version>
+				<executions>
+					<execution>
+						<id>aggregate</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<descriptor>src/main/assembly/default.xml</descriptor>
+						</configuration>
+					</execution>
+				</executions>
+				<configuration>
+					<attach>false</attach>
+					<finalName>flashmind_${project.version}</finalName>
+					<appendAssemblyId>false</appendAssemblyId>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 	<dependencies>
@@ -59,35 +82,38 @@
 			<version>3.3.0-v3346</version>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.xmind.ui</groupId>
-			<artifactId>mindmap</artifactId>
-			<version>3.3.0</version>
-			<scope>provided</scope>
-		</dependency>
+
 		<dependency>
 			<groupId>org.eclipse.ui</groupId>
 			<artifactId>workbench</artifactId>
 			<version>3.3.0-I20070608-1100</version>
 			<scope>provided</scope>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.xmind.ui</groupId>
+			<artifactId>mindmap</artifactId>
+			<version>[3.3.0,)</version>
+			<scope>provided</scope>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.xmind</groupId>
 			<artifactId>core</artifactId>
-			<version>3.3.0</version>
+			<version>[3.3.0,)</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.velocity</groupId>
 			<artifactId>velocity</artifactId>
 			<version>1.7</version>
-			<scope>provided</scope>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.4</version>
-			<scope>provided</scope>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 

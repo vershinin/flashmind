@@ -45,7 +45,7 @@ public class FreeMindExportWizardPage extends AbstractMindMapExportPage {
 
 	@Override
 	protected void setDialogFilters(FileDialog dialog, List<String> filterNames, List<String> filterExtensions) {
-		filterNames.add(0, WizardMessages.FreeMindPage_filterName);
+		filterNames.add(0, WizardMessages.HtmlExportPage_FileDialog_HTMLFile);
 		filterExtensions.add(0, "*" + FlashExportWizard.HTML_EXT); //$NON-NLS-1$
 		super.setDialogFilters(dialog, filterNames, filterExtensions);
 	}
