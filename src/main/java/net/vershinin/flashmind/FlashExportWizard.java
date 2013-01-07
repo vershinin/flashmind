@@ -156,9 +156,14 @@ public class FlashExportWizard extends AbstractMindMapExportWizard {
 		VelocityContext context = new VelocityContext();
 
 		context.put(KEY_TITLE, mindMap.getCentralTopic().getTitleText());
+
 		context.put(KEY_JS_FILE, FilenameUtils.concat(resourcesDirectory, JS_FILE_NAME));
-		context.put(KEY_MINDMAP_FILE, FilenameUtils.concat(resourcesDirectory, mindmapFilename));
-		context.put(KEY_SWF_FILE, FilenameUtils.concat(resourcesDirectory, SWF_FILE_NAME));
+
+		String mindmapFile = FilenameUtils.concat(resourcesDirectory, mindmapFilename);
+		context.put(KEY_MINDMAP_FILE, FilenameUtils.separatorsToUnix(mindmapFile));
+
+		String swfFilename = FilenameUtils.concat(resourcesDirectory, SWF_FILE_NAME);
+		context.put(KEY_SWF_FILE, FilenameUtils.separatorsToUnix(swfFilename));
 
 		StringWriter writer = new StringWriter();
 		template.merge(context, writer);
